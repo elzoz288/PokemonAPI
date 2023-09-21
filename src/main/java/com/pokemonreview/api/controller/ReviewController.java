@@ -1,10 +1,10 @@
 package com.pokemonreview.api.controller;
 
-import com.pokemonreview.api.dto.ReviewDto;
+import com.pokemonreview.api.dto.reviewDtos.ReviewDto;
+import com.pokemonreview.api.dto.reviewDtos.ReviewSourceDto;
 import com.pokemonreview.api.service.ReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,13 +29,13 @@ public class ReviewController {
     }
 
      @PostMapping("/addReview/{pokemonID}")
-    public ResponseEntity<ReviewDto>addReview(@PathVariable(value = "pokemonID") int pokemonID,@Valid @RequestBody ReviewDto reviewDto){
-        return new ResponseEntity<>(reviewService.addReview(reviewDto,pokemonID),HttpStatus.CREATED);
+    public ResponseEntity<ReviewDto>addReview(@PathVariable(value = "pokemonID") int pokemonID, @Valid @RequestBody ReviewSourceDto reviewSource){
+        return new ResponseEntity<>(reviewService.addReview(reviewSource,pokemonID),HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{reviewId}/{pokemonId}")
-    public ResponseEntity<ReviewDto> updateReview(@PathVariable int reviewId,@PathVariable int pokemonId,@Valid @RequestBody ReviewDto reviewDto){
-        return new ResponseEntity<>(reviewService.updateReview(reviewDto,reviewId,pokemonId),HttpStatus.CREATED);
+    public ResponseEntity<ReviewDto> updateReview(@PathVariable int reviewId, @PathVariable int pokemonId, @Valid @RequestBody ReviewSourceDto reviewSource){
+        return new ResponseEntity<>(reviewService.updateReview(reviewSource,reviewId,pokemonId),HttpStatus.CREATED);
     }
 
     @DeleteMapping("/delete/{reviewId}")

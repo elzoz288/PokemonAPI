@@ -1,7 +1,7 @@
 package com.pokemonreview.api.models;
 
-import com.pokemonreview.api.dto.PokemonDto;
-import com.pokemonreview.api.dto.ReviewDto;
+import com.pokemonreview.api.dto.pokemonDtos.PokemonDto;
+import com.pokemonreview.api.dto.pokemonDtos.ReviewPokemonDto;
 
 public class Mappers {
     public static PokemonDto mapToPokemonDto(Pokemon pokemon){
@@ -15,7 +15,6 @@ public class Mappers {
         Pokemon pokemon =new Pokemon();
         pokemon.setId(pokemonDto.getId());
         pokemon.setName(pokemonDto.getName());
-        pokemon.setType(pokemonDto.getType());
         return pokemon;
     }
     public static Pokemon mapToPokemonResponse(Pokemon pokemon){
@@ -26,23 +25,25 @@ public class Mappers {
         return responsePokemon;
     }
 
-    public static Review mapToReviewEntity(ReviewDto reviewDto){
-        Review review=new Review();
+    public static Review mapToReviewEntity(ReviewPokemonDto reviewDto){
+      /*  Review review=new Review();
         review.setId(reviewDto.getId());
         review.setTitle(reviewDto.getTitle());
         review.setContent(reviewDto.getContent());
         review.setStart(reviewDto.getStart());
         review.setPokemon(reviewDto.getPokemon());
-        return review;
+        return review;*/
+        return null;
     }
-    public static ReviewDto mapToReviewDto(Review review){
-        ReviewDto reviewDto =new ReviewDto();
+    public static ReviewPokemonDto mapToReviewDto(Review review){
+        /*ReviewDto reviewDto =new ReviewDto();
         reviewDto.setId(review.getId());
         reviewDto.setTitle(review.getTitle());
         reviewDto.setContent(review.getContent());
         reviewDto.setStart(review.getStart());
         reviewDto.setPokemon(Mappers.mapToPokemonResponse(review.getPokemon()));
-        return reviewDto;
+        return reviewDto;*/
+        return null;
     }
 
 

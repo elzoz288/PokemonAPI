@@ -1,13 +1,14 @@
 package com.pokemonreview.api.service.impl;
 
-import com.pokemonreview.api.dto.PokemonDto;
-import com.pokemonreview.api.dto.PokemonResponse;
+import com.pokemonreview.api.dto.pokemonDtos.PokemonDto;
+import com.pokemonreview.api.dto.pokemonDtos.PokemonResponse;
+import com.pokemonreview.api.dto.pokemonDtos.PokemonSourceDto;
 import com.pokemonreview.api.exception.PokemonNotFoundException;
-import com.pokemonreview.api.models.Mappers;
 import com.pokemonreview.api.models.Pokemon;
 import com.pokemonreview.api.repository.PokemonRepository;
 import com.pokemonreview.api.service.PokemonService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,15 +21,11 @@ import java.util.stream.Collectors;
 @Service
 public class PokemonServiceImpl implements PokemonService {
     private  final PokemonRepository pokemonRepository;
+    private final ModelMapper modelMapper;
     @Override
-    public PokemonDto createPokemon(PokemonDto pokemonDto) {
-         //mapping dto to pokemon to add the new value to the data base
-        Pokemon pokemon= Mappers.mapToPokemonEntity(pokemonDto);
-
-        Pokemon newpokemon = pokemonRepository.save(pokemon);
-        //mapping pokemon to dto to return it as a response
-        PokemonDto pokemonResponse = Mappers.mapToPokemonDto(newpokemon);
-        return pokemonResponse;
+    public PokemonDto createPokemon(PokemonSourceDto pokemonSource) {
+        Pokemon newPokemon=pokemonRepository.save(modelMapper.map(pokemonSource,Pokemon.class));
+        return modelMapper.map(newPokemon,PokemonDto.class);
     }
 
     @Override
@@ -36,9 +33,8 @@ public class PokemonServiceImpl implements PokemonService {
         Pageable pageable = PageRequest.of(pageNo,pageSize);
         Page<Pokemon> pokemons = pokemonRepository.findAll(pageable);
         List<Pokemon> listOfPokemons =pokemons.getContent();
-         //using our mapper to map the Pokemon to dto
-        List<PokemonDto> content = listOfPokemons.stream().map(Mappers::mapToPokemonDto).collect(Collectors.toList());
-
+        List<PokemonDto> content = listOfPokemons.stream()
+                .map(pokemon -> modelMapper.map(pokemon, PokemonDto.class)).collect(Collectors.toList());
         PokemonResponse pokemonResponse = new PokemonResponse();
         pokemonResponse.setContent(content);
         pokemonResponse.setPageNo(pokemons.getNumber());
@@ -53,17 +49,17 @@ public class PokemonServiceImpl implements PokemonService {
     public PokemonDto getByID(int id) {
      Pokemon pokemon = pokemonRepository.findById(id)
                 .orElseThrow(()-> new  PokemonNotFoundException("Pokemon could not be found by id "));
-    return Mappers.mapToPokemonDto(pokemon);
+    return modelMapper.map(pokemon, PokemonDto.class);
     }
 
     @Override
-    public PokemonDto updatePokemon(int id, PokemonDto pokemonDto) {
-        Pokemon pokemon =pokemonRepository.findById(id)
+    public PokemonDto updatePokemon(int id, PokemonSourceDto pokemonSource) {
+        Pokemon testpokemon =pokemonRepository.findById(id)
                 .orElseThrow(()->new PokemonNotFoundException("Pokemon could not be updated"));
-        pokemon.setName(pokemonDto.getName());
-        pokemon.setType(pokemonDto.getType());
-        Pokemon pokemonResponse =pokemonRepository.save(pokemon);
-        return Mappers.mapToPokemonDto(pokemon);
+        testpokemon.setName(pokemonSource.getName());
+        testpokemon.setType(pokemonSource.getType());
+        Pokemon pokemonResponse =pokemonRepository.save(testpokemon);
+        return modelMapper.map(pokemonResponse, PokemonDto.class);
     }
 
     @Override
@@ -71,7 +67,7 @@ public class PokemonServiceImpl implements PokemonService {
         Pokemon pokemon=pokemonRepository.findById(id)
                 .orElseThrow(()->new PokemonNotFoundException("there is no pokemon with this id "));
         if(!pokemon.getName().isEmpty()) pokemonRepository.deleteById(id);
-        return Mappers.mapToPokemonDto(pokemon);
+        return modelMapper.map(pokemon, PokemonDto.class);
     }
 
 

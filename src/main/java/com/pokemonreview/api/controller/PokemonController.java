@@ -1,7 +1,8 @@
 package com.pokemonreview.api.controller;
 
-import com.pokemonreview.api.dto.PokemonDto;
-import com.pokemonreview.api.dto.PokemonResponse;
+import com.pokemonreview.api.dto.pokemonDtos.PokemonDto;
+import com.pokemonreview.api.dto.pokemonDtos.PokemonResponse;
+import com.pokemonreview.api.dto.pokemonDtos.PokemonSourceDto;
 import com.pokemonreview.api.service.PokemonService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +31,13 @@ public class PokemonController {
 
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<PokemonDto> addPockemon(@Valid @RequestBody PokemonDto pokemonDto){
-        return new ResponseEntity<>(pokemonService.createPokemon(pokemonDto), HttpStatus.CREATED);
+    public ResponseEntity<PokemonDto> addPockemon(@Valid @RequestBody PokemonSourceDto pokemonSource){
+        return new ResponseEntity<>(pokemonService.createPokemon(pokemonSource), HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<PokemonDto>updatePockemon(@PathVariable int id,@Valid @RequestBody PokemonDto pokemonDto){
-     return new ResponseEntity<>(pokemonService.updatePokemon(id,pokemonDto),HttpStatus.CREATED);
+    public ResponseEntity<PokemonDto>updatePockemon(@PathVariable int id,@Valid @RequestBody PokemonSourceDto pokemonSource){
+     return new ResponseEntity<>(pokemonService.updatePokemon(id,pokemonSource),HttpStatus.CREATED);
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<PokemonDto> deletePockemon(@PathVariable int id){
